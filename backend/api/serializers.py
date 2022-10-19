@@ -121,8 +121,8 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
             check_list.append(d)
         return True
 
-    def validate_ingredients(self, data):
-        ingredients = data.get('ingredients')
+    def validate_ingredients(self, value):
+        ingredients = value.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError({
                 'errors': 'Укажите ингридиенты'
@@ -141,23 +141,25 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
                  f'{", ".join(x["name"] for x in zero_amount_ingredients)} '
                  f'должно быть указано количество больше нуля'))
 
-        tags = data.get('tags')
+    def validate_tags(self, value):
+        tags = value.get('tags')
 
         if not self.unique(tags):
             raise serializers.ValidationError('Теги должны быть уникальными')
+        return value
 
-        if data.get('cooking_time') <= 0:
+    def validate_cooking_time(self, value):
+        if value.get('cooking_time') <= 0:
             raise serializers.ValidationError('Время приготовления '
                                               'задано не верно')
+        return value
 
-        return data
-
-    def create_or_update(self, obj, ingredients):
+    def add_ingredients(self, obj, ingredients):
         ingredients_list = [AmountIngredient(
             ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
             amount=ingredient['amount'],
         ) for ingredient in ingredients]
-        AmountIngredient.objects.bulk_create(
+        AmountIngredient.objects.get_or_create(
             ingredients_list
         )
         obj.ingredients.set(ingredients_list)
