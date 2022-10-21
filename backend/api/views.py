@@ -17,9 +17,9 @@ from rest_framework.views import APIView
 from .filters import RecipeFilter
 from .paginators import AddPageLimitPaginator
 from .permissions import IsAuthorOrReadOnly
-from .serializers import (RecipesCreateSerializer, FollowSerializer,
-                          GetRecipeSerializer, IngredientSerializer,
-                          MyTagSerializer, ShoppingCartFavsSerializer,
+from .serializers import (FollowSerializer, IngredientSerializer,
+                          GetRecipeSerializer, MyTagSerializer,
+                          RecipesCreateSerializer, ShoppingCartFavsSerializer,
                           SubscriptionSerializer)
 
 User = get_user_model()
