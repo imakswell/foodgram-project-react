@@ -26,12 +26,14 @@ class MyUserSerializer(UserSerializer):
 
 
 class MyTagSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Tag
         fields = '__all__'
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Ingredient
         fields = '__all__'
@@ -119,48 +121,38 @@ class RecipesCreateSerializer(serializers.ModelSerializer):
             check_list.append(d)
         return True
 
-    def validate_ingredients(self, value):
-        ingredients = value
+    def validate_ingredients(self, data):
+        ingredients = data.get('ingredients')
         if not ingredients:
-            raise serializers.ValidationError('Укажите ингридиенты!')
-        validated_ingredients = []
-        for ingredient in ingredients:
-            amount = ingredient['amount']
-            id_to_check = ingredient['id']
-            ingredient_to_check = Ingredient.objects.filter(id=id_to_check)
-            if not ingredient_to_check.exists():
-                raise serializers.ValidationError(
-                    'Ингридиента нет в базе!')
-            if not isinstance(amount, (float, int)):
-                raise serializers.ValidationError('Количество небходимо'
-                                                  ' указать цифрами!')
-            if amount <= 0:
-                raise serializers.ValidationError('Количество ингредиента'
-                                                  'должно быть больше 0')
-            ingredient_to_check = get_object_or_404(
-                Ingredient,
-                id=ingredient['id']
-            )
-            if ingredient_to_check in validated_ingredients:
-                raise serializers.ValidationError('Ингредиенты должны быть'
-                                                  'уникальными')
-            validated_ingredients.append(ingredient_to_check)
-        return value
+            raise serializers.ValidationError({
+                'errors': 'Укажите ингридиенты'
+            })
 
-    def validate_tags(self, value):
-        tags = value.get('tags')
+        if not self.unique(ingredients):
+            raise serializers.ValidationError({
+                'errors': 'Ингредиенты должны быть уникальными'
+            })
+
+        zero_amount_ingredients = [ingredient for ingredient in ingredients
+                                   if ingredient['amount'] <= 0]
+        if zero_amount_ingredients:
+            raise serializers.ValidationError(
+                (f'В ингридиентах '
+                 f'{", ".join(x["name"] for x in zero_amount_ingredients)} '
+                 f'должно быть указано количество больше нуля'))
+
+        tags = data.get('tags')
 
         if not self.unique(tags):
             raise serializers.ValidationError('Теги должны быть уникальными')
-        return value
 
-    def validate_cooking_time(self, value):
-        if value.get('cooking_time') <= 0:
+        if data.get('cooking_time') <= 0:
             raise serializers.ValidationError('Время приготовления '
                                               'задано не верно')
-        return value
 
-    def create_ingridients(self, obj, ingredients):
+        return data
+
+    def create_or_update(self, obj, ingredients):
         ingredients_list = [AmountIngredient(
             ingredient=get_object_or_404(Ingredient, id=ingredient['id']),
             amount=ingredient['amount'],
@@ -235,6 +227,7 @@ class FollowSerializer(MyUserSerializer):
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Subscription
         fields = ['user', 'author']
