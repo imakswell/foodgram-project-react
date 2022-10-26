@@ -65,3 +65,9 @@ sudo docker-compose exec backend python manage.py runscript scripts.load_data
 ![foodgram_workflow](https://github.com/imakswell/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
 Сервис доступен по адресу [http://84.201.128.16/recipes](http://84.201.128.16/recipes)
+
+Админ-панель: [http://84.201.128.16/admin](http://84.201.128.16/admin)
+```
+Admin (Логин)
+1q2w3e4r (Пароль)
+```
