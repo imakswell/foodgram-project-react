@@ -11,7 +11,7 @@ services:
     restart: always
 
   backend:
-    image: imakswell/foodgram-backend:latest
+    image: maks/foodgram-backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -23,7 +23,7 @@ services:
       - ./.env
 
   frontend:
-    image: imakswell/foodgram-frontend:latest
+    image: maks/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
 
