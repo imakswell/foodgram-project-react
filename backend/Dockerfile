@@ -1,13 +1,12 @@
 FROM python:3.8-slim
 
-RUN mkdir /food
+WORKDIR /fd
 
-COPY requirements.txt /food
+COPY . .
 
-RUN pip3 install -r /app/requirements.txt --no-cache-dir
+RUN python -m pip install --upgrade pip
+RUN pip install -r requirements.txt --no-cache-dir
 
-COPY foodgram-project-react/ /food
+CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8000" ]
 
-WORKDIR /food
-
-CMD ["gunicorn", "api_yamdb.wsgi:application", "--bind", "0:8000" ]
+LABEL author='MaksimFagin'
