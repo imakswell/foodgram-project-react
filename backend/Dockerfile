@@ -6,7 +6,7 @@ COPY requirements.txt /food
 
 RUN pip3 install -r /app/requirements.txt --no-cache-dir
 
-COPY backend/ /food
+COPY foodgram-project-react/ /food
 
 WORKDIR /food
 
