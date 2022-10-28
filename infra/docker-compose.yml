@@ -23,7 +23,7 @@ services:
       - ./.env
 
   frontend:
-    image: imakswell/foodgram-frontend:latest
+    image: imakswell/foodgram-backend:v3
     volumes:
       - ../frontend/:/app/result_build/
 
