@@ -11,21 +11,21 @@ services:
     restart: always
 
   backend:
-    image: imakswell/foodgram-backend:latest
+    image: imakswell/foodgram-backend:v2
     restart: always
     volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
-      - redoc:/app/api/docs/
+      - static_value:/food/static/
+      - media_value:/food/media/
+      - redoc:/food/api/docs/
     depends_on:
       - db
     env_file:
       - ./.env
 
   frontend:
-    image: imakswell/foodgram-backend:latest
+    image: imakswell/foodgram-backend:v2
     volumes:
-      - ../frontend/:/app/result_build/
+      - ../frontend/:/food/result_build/
 
   nginx:
     image: nginx:1.21.3-alpine
