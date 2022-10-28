@@ -1,12 +1,13 @@
 FROM python:3.8-slim
 
-WORKDIR /fd
+RUN mkdir /food
 
-COPY . .
+COPY requirements.txt /food
 
-RUN python -m pip install --upgrade pip
-RUN pip install -r requirements.txt --no-cache-dir
+RUN pip3 install -r /app/requirements.txt --no-cache-dir
 
-CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8000" ]
+COPY backend/ /food
 
-LABEL author='MaksimFagin'
+WORKDIR /food
+
+CMD ["gunicorn", "api_yamdb.wsgi:application", "--bind", "0:8000" ]
