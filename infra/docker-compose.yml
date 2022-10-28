@@ -10,7 +10,7 @@ services:
       - ./.env
     restart: always
 
-  backend2:
+  back:
     image: imakswell/foodgram-backend:latest
     restart: always
     volumes:
