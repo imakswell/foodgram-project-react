@@ -10,8 +10,8 @@ services:
       - ./.env
     restart: always
 
-  back:
-    image: imakswell/foodgram-backend:latest
+  backend:
+    image: v1/foodgram-backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
