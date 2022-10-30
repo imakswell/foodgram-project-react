@@ -1,5 +1,5 @@
 import os
-from csv import DictReader
+import csv
 
 from django.core.management import BaseCommand
 from recipes.models import Ingredient
@@ -22,16 +22,11 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        file_path = options['file_path']
-        with open(file_path, encoding='utf-8') as csv_file:
-            reader = DictReader(csv_file)
+        with open('recipes/data/ingredients.csv', encoding='utf-8') as f:
+            reader = csv.reader(f)
             for row in reader:
-                _, created = Ingredient.objects.get_or_create(
-                    name=row['name'],
-                    measurement_unit=row['measurement_unit'],
-                )
+                name, unit = row
+                Ingredient.objects.get_or_create(
+                    name=name, measurement_unit=unit)
         self.stdout.write(
-            self.style.SUCCESS(
-                f'Data from {file_path}  uploaded successfully'
-            )
-        )
+            self.style.SUCCESS('Successfully loaded ingredients'))

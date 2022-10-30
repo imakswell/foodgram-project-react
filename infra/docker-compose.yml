@@ -11,7 +11,7 @@ services:
     restart: always
 
   backend:
-    image: imakswell/foodgram_backend:v2
+    image: imakswell/foodgram_backend:v3
     restart: always
     volumes:
       - static_value:/app/static/
